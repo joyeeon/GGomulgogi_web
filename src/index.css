@@ -1,0 +1,21 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+    body {
+        margin: 0;
+        padding: 0;
+        @apply bg-gray-300 text-[10px];
+    }
+}
+
+@layer components {
+    .page {
+        @apply flex flex-col items-center justify-center min-h-screen p-4;
+    }
+
+    .btn {
+        @apply flex flex-row items-center gap-2 text-[10px] rounded-full bg-white text-black hover:bg-gray-200 px-4 py-2 transition-colors duration-300;
+    }
+}
