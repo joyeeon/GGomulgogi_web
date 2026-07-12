@@ -4,6 +4,10 @@ import { useState , useEffect} from "react";
 import FishModelView from "../components/Drawpage/FishModelView";
 //import ColoringView from "../components/Drawpage/ColoringView";
 
+const SERVER_URL = import.meta.env.DEV
+  ? "ws://localhost:8080?role=web"
+  : "wss://ggomulgogi-server.onrender.com?role=web";
+
 const Drawpage = () => {
     const navigate = useNavigate();
     const [socket, setSocket] = useState(null);
@@ -13,7 +17,7 @@ const Drawpage = () => {
     });
 
     useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8080?role=web");
+        const ws = new WebSocket(SERVER_URL);
 
         setSocket(ws);
         return () => { ws.close(); };

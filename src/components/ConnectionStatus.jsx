@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-const SERVER_URL = "ws://localhost:8080?role=web";
+const SERVER_URL = import.meta.env.DEV
+  ? "ws://localhost:8080?role=web"
+  : "wss://ggomulgogi-server.onrender.com?role=web";
 
 const STATUS_STYLE = {
     connecting: "bg-yellow-400",
