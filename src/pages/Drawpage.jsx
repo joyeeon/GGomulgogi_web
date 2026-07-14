@@ -22,9 +22,10 @@ const Drawpage = () => {
         setSocket(ws);
         return () => { ws.close(); };
 
-    }, []); //한 번만 실행되도록
+    }, []); //한 번만 실행되도록v
 
     var imageData = {
+        nickname: localStorage.getItem("nickname"),
         type: "image",
         image_file: image.image_file,
     }
