@@ -1,30 +1,21 @@
 import { LuFish } from "react-icons/lu";
 import {useNavigate} from "react-router-dom";
-import { useState , useEffect} from "react";
+import { useState } from "react";
 import FishModelView from "../components/Drawpage/FishModelView";
+import { useSocketStore } from "../store/socketStore";
 //import ColoringView from "../components/Drawpage/ColoringView";
 
-const SERVER_URL = import.meta.env.DEV
-  ? "ws://localhost:8080?role=web"
-  : "wss://ggomulgogi-server.onrender.com?role=web";
 
 const Drawpage = () => {
     const navigate = useNavigate();
-    const [socket, setSocket] = useState(null);
+    const send = useSocketStore((state) => state.send);
     const [image, setImage] = useState({
         image_file: null,
         image_preview: null,
     });
 
-    useEffect(() => {
-        const ws = new WebSocket(SERVER_URL);
 
-        setSocket(ws);
-        return () => { ws.close(); };
-
-    }, []); //한 번만 실행되도록v
-
-    var imageData = {
+    var Data = {
         nickname: localStorage.getItem("nickname"),
         type: "image",
         image_file: image.image_file,
@@ -35,7 +26,7 @@ const Drawpage = () => {
             alert("이미지를 선택해주세요.");
             return;
         }
-        socket?.send(JSON.stringify(imageData));
+        send(Data);
     };
 
     const handleImageChange = (e) => {
@@ -57,7 +48,12 @@ const Drawpage = () => {
         <div className="items-start min-h-screen mt-0 page">
             <header className = "w-[100%]">
                 <button className="mt-10 btn"
-                    onClick= {sendMsg}>
+                    onClick= { ()=>
+                        {
+                            sendMsg();
+                            navigate("/game");
+                        }
+                    }>
                     <LuFish/>
                     <span> 완료 </span>
                 </button>

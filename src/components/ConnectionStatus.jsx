@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
+import {useSocketStore} from "../store/socketStore";
 
-const SERVER_URL = import.meta.env.DEV
-  ? "ws://localhost:8080?role=web"
-  : "wss://ggomulgogi-server.onrender.com?role=web";
+
 
 const STATUS_STYLE = {
     connecting: "bg-yellow-400",
@@ -11,18 +10,14 @@ const STATUS_STYLE = {
 };
 
 const ConnectionStatus = () => {
-    const [status, setStatus] = useState("connecting");
-
+    const status = useSocketStore((state) => state.status);
+    const connect = useSocketStore((state) => state.connect);
+    
     useEffect(() => {
-        const ws = new WebSocket(SERVER_URL);
-        ws.onopen = () => setStatus("connected");
-        ws.onclose = () => setStatus("disconnected");
-        ws.onerror = () => setStatus("disconnected");
+        connect();
+    }, [connect]);
 
-        return () => {
-            ws.close();
-        };
-    }, []);
+    
 
     return (
         <div className="fixed flex items-center gap-2 px-3 py-1 bg-white rounded-full shadow bottom-4 right-4">
