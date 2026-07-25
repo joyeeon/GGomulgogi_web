@@ -1,48 +1,28 @@
 import { LuFish } from "react-icons/lu";
 import {useNavigate} from "react-router-dom";
-import { useState } from "react";
 import FishModelView from "../components/Drawpage/FishModelView";
 import { useSocketStore } from "../store/socketStore";
+import { useCanvasStore } from "../store/canvasStore";
 //import ColoringView from "../components/Drawpage/ColoringView";
 
 
 const Drawpage = () => {
     const navigate = useNavigate();
     const send = useSocketStore((state) => state.send);
-    const [image, setImage] = useState({
-        image_file: null,
-        image_preview: null,
-    });
+    const canvas = useCanvasStore((state)=>state.canvas);
 
-
-    var Data = {
-        nickname: localStorage.getItem("nickname"),
-        type: "image",
-        image_file: image.image_file,
-    }
-
-    const sendMsg = () => {
-        if (image.image_file === null) {
-            alert("이미지를 선택해주세요.");
+    const sendMsg = () =>{
+        if(!canvas) {
+            alert("캔버스가 비어 있어요!");
             return;
         }
-        send(Data);
-    };
+        send({
+            nickname: localStorage.getItem("nickname"),
+            type: "image",
+            image_file: canvas.toDataURL("image/png"),
+        })
+    }
 
-    const handleImageChange = (e) => {
-        const selectedFile = e.target.files[0];
-
-        if (selectedFile) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                setImage({
-                    image_file: e.target.result,
-                    image_preview: e.target.result,
-                });
-            };
-        reader.readAsDataURL(selectedFile);       
-        }
-    };
 
     return (
         <div className="items-start min-h-screen mt-0 page">
@@ -57,11 +37,11 @@ const Drawpage = () => {
                     <LuFish/>
                     <span> 완료 </span>
                 </button>
-                <input 
+                {/* <input 
                     type ="file"
                     accept="image/*"
                     onChange={handleImageChange}
-                />
+                /> */}
             </header>
             
             <FishModelView/>

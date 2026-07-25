@@ -16,7 +16,6 @@ const ConnectionStatus = () => {
     useEffect(() => {
         connect();
     }, [connect]);
-
     
 
     return (
