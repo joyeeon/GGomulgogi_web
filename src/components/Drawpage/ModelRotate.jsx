@@ -14,6 +14,11 @@ const RotateModel = ({onDrawStart, onDrawEnd}) => {
         const c = document.createElement("canvas");
         c.width = 1024;
         c.height = 1024;
+
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, c.width, c.height);
+        
         return c;
     }, []);
 
