@@ -7,7 +7,10 @@ const FishModelView = () => {
     const controlsRef = useRef();
 
     return (
-        <Canvas className="w-[100%] h-[1200px] bg-blue-200">
+        <Canvas className="bg-transparent "
+            style={{width:"100%", height:"300px"}}
+            camera={{position:[100,0,80]}}
+        >
             <OrbitControls 
                 enableZoom={true}
                 ref = {controlsRef}

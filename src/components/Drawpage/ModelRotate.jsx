@@ -5,6 +5,7 @@ import Fish from '../../assets/models/Fish.fbx';
 import * as THREE from "three";
 import PropTypes from "prop-types";
 import { useCanvasStore } from "../../store/canvasStore";
+import { useBrushStore } from "../../store/brushStore";
 
 
 const RotateModel = ({onDrawStart, onDrawEnd}) => {
@@ -32,8 +33,10 @@ const RotateModel = ({onDrawStart, onDrawEnd}) => {
     map: drawingTexture,
     transparent: true,
 }), [drawingTexture]);
-
+``
     const isDrawing = useRef(false);
+    const color = useBrushStore((state) => state.color);
+    const brushSize = useBrushStore((state) => state.brushSize);
 
     const draw = (uv) => {
         const context = canvas.getContext("2d");
@@ -41,8 +44,8 @@ const RotateModel = ({onDrawStart, onDrawEnd}) => {
         const y = (1-uv.y) * canvas.height;
 
         context.beginPath();
-        context.arc(x, y, 10, 0, Math.PI * 2); // 10 = 브러시 크기 (나중에 조절 가능하게)
-        context.fillStyle = "#0074d9"; // 브러시 색 (나중에 조절 가능하게)
+        context.arc(x, y, brushSize, 0, Math.PI * 2); // 10 = 브러시 크기 (나중에 조절 가능하게)
+        context.fillStyle = color;
         context.fill();
 
         drawingTexture.needsUpdate = true;
@@ -70,18 +73,6 @@ const RotateModel = ({onDrawStart, onDrawEnd}) => {
     useEffect(() =>{
         setCanvas(canvas);
     }, [canvas, setCanvas]);
-    // useEffect(() => {
-    //     let meshCount = 0;
-    // fishmodel.traverse((child) => {
-    //     if (child.isMesh) {
-    //         meshCount++;
-    //         console.log(
-    //             child.name,
-    //             "attributes:", Object.keys(child.geometry.attributes),
-    //             "has uv:", !!child.geometry.attributes.uv
-    //         );
-    //     }
-    // });
 
     useEffect(() => {
     fishmodel.traverse((child) => {
@@ -91,7 +82,14 @@ const RotateModel = ({onDrawStart, onDrawEnd}) => {
             child.userData.hasDrawLayer = true;
         }
     });
-}, [fishmodel, drawingMaterial]);
+    }, [fishmodel, drawingMaterial]);
+
+    useEffect(()=> {
+        const box = new THREE.Box3().setFromObject(fishmodel);
+        const center = box.getCenter(new THREE.Vector3());
+        fishmodel.position.sub(center);
+    }, [fishmodel]);
+
     return (
         <primitive 
         ref={fishRef} 

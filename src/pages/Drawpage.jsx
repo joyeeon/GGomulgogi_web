@@ -3,7 +3,9 @@ import {useNavigate} from "react-router-dom";
 import FishModelView from "../components/Drawpage/FishModelView";
 import { useSocketStore } from "../store/socketStore";
 import { useCanvasStore } from "../store/canvasStore";
-//import ColoringView from "../components/Drawpage/ColoringView";
+import ColoringView from "../components/Drawpage/ColoringView";
+import ModelSelect from "../components/Drawpage/ModelSelect";
+import BrushSizeSlider from "../components/Drawpage/BrushSizeSlider";
 
 
 const Drawpage = () => {
@@ -25,9 +27,9 @@ const Drawpage = () => {
 
 
     return (
-        <div className="items-start min-h-screen mt-0 page">
+        <div className="flex justify-start min-h-screen mt-0 mb-0 page">
             <header className = "w-[100%]">
-                <button className="mt-10 btn"
+                <button className="fixed top-0 right-0 mr-4 mt-7 btn"
                     onClick= { ()=>
                         {
                             sendMsg();
@@ -37,15 +39,16 @@ const Drawpage = () => {
                     <LuFish/>
                     <span> 완료 </span>
                 </button>
-                {/* <input 
-                    type ="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                /> */}
             </header>
             
             <FishModelView/>
-            {/* <ColoringView/> */}
+            <ModelSelect/>
+
+            <BrushSizeSlider />
+
+            <div className="w-full mt-auto">
+                <ColoringView/>
+            </div>
         </div>
     )
 }

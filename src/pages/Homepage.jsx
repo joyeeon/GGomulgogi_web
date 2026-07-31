@@ -35,11 +35,15 @@ const Homepage = () => {
         <div className="page">
         <div className = "w-[50%] h-[100px] bg-red-200">   로고 대신</div>
 
-        <input type="text" placeholder="닉네임을 입력하세요" 
-        className="w-full max-w-xs mt-10 input input-bordered"
+        <div className="flex flex-col items-start justify-center gap-1 mt-10">
+            <p className="pl-2 text-white">닉네임을 입력해 주세요.</p>
+            <input type="text" placeholder="닉네임을 입력하세요" 
+        className=" max-w-xs min-w-[70%] input input-bordered input-nickname"
         value={nickname}
         onChange={handleNicknameChange}
         />
+        </div>
+        
 
         <button className="mt-10 btn"
         onClick={() => 
