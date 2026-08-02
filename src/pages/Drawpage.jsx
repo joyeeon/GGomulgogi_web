@@ -29,7 +29,7 @@ const Drawpage = () => {
     return (
         <div className="flex justify-start min-h-screen mt-0 mb-0 page">
             <header className = "w-[100%]">
-                <button className="fixed top-0 right-0 mr-4 mt-7 btn"
+                <button className="fixed top-0 right-0 z-50 mr-4 mt-7 btn"
                     onClick= { ()=>
                         {
                             sendMsg();
