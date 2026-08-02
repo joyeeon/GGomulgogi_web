@@ -1,5 +1,9 @@
 import { useRef } from "react";
 import { useSocketStore} from "../../store/socketStore";
+import btnUp from "../../assets/images/btn/btn_up.png";
+import btnDown from "../../assets/images/btn/btn_bottom.png";
+import btnLeft from "../../assets/images/btn/btn_left.png";
+import btnRight from "../../assets/images/btn/btn_right.png";
 
 const Gamepad = () => {
     const send = useSocketStore((state)=>state.send )
@@ -18,27 +22,42 @@ const Gamepad = () => {
 
 
     return(
-        <div className="gap-5 flex flex-col items-center justify-center w-[100%] h-[100%] bg-gray-200">
-            <button className="btn active:bg-pink-200"
-            onMouseDown={()=>handlePress("up")}
-            onMouseUp={()=>handleRelease("up")}
-            onMouseLeave={()=>handleRelease("up")}
-            >Up</button>
-            <button className="btn active:bg-pink-200"
-            onMouseDown={()=>handlePress("down")}
-            onMouseUp={()=>handleRelease("down")}
-            onMouseLeave={()=>handleRelease("down")}
-            >Down</button>
-            <button className="btn active:bg-pink-200"
-            onMouseDown={()=>handlePress("left")}
-            onMouseUp={()=>handleRelease("left")}
-            onMouseLeave={()=>handleRelease("left")}
-            >Left</button>
-            <button className="btn active:bg-pink-200"
-            onMouseDown={()=>handlePress("right")}
-            onMouseUp={()=>handleRelease("right")}
-            onMouseLeave={()=>handleRelease("right")}
-            >Right</button>
+        <div className="grid w-[50%] h-[90%] grid-cols-3 grid-rows-3 gap-2 place-items-center mt-10">
+            <button
+                className="col-start-2 row-start-1 overflow-hidden rounded-full w-14 h-14 active:scale-90"
+                onMouseDown={()=>handlePress("up")}
+                onMouseUp={()=>handleRelease("up")}
+                onMouseLeave={()=>handleRelease("up")}
+            >
+                <img src={btnUp} alt="위" className="object-cover w-full h-full" />
+            </button>
+
+            <button
+                className="col-start-1 row-start-2 overflow-hidden rounded-full w-14 h-14 active:scale-90"
+                onMouseDown={()=>handlePress("left")}
+                onMouseUp={()=>handleRelease("left")}
+                onMouseLeave={()=>handleRelease("left")}
+            >
+                <img src={btnLeft} alt="왼쪽" className="object-cover w-full h-full" />
+            </button>
+
+            <button
+                className="col-start-3 row-start-2 overflow-hidden rounded-full w-14 h-14 active:scale-90"
+                onMouseDown={()=>handlePress("right")}
+                onMouseUp={()=>handleRelease("right")}
+                onMouseLeave={()=>handleRelease("right")}
+            >
+                <img src={btnRight} alt="오른쪽" className="object-cover w-full h-full" />
+            </button>
+
+            <button
+                className="col-start-2 row-start-3 overflow-hidden rounded-full w-14 h-14 active:scale-90"
+                onMouseDown={()=>handlePress("down")}
+                onMouseUp={()=>handleRelease("down")}
+                onMouseLeave={()=>handleRelease("down")}
+            >
+                <img src={btnDown} alt="아래" className="object-cover w-full h-full" />
+            </button>
         </div>
     )
 }
