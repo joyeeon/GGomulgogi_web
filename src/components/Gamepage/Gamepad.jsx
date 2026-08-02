@@ -1,16 +1,21 @@
+import { useRef } from "react";
 import { useSocketStore} from "../../store/socketStore";
 
 const Gamepad = () => {
     const send = useSocketStore((state)=>state.send )
+    const pressedDirections = useRef({});
 
     const handlePress = (direction) => {
+        pressedDirections.current[direction] = true;
         send({type:"move", direction, pressed:true});
     };
 
     const handleRelease = (direction) =>{
+        if (!pressedDirections.current[direction]) return; // 실제로 눌린 적 없으면 무시
+        pressedDirections.current[direction] = false;
         send({type:"move", direction, pressed:false});
     };
-    
+
 
     return(
         <div className="gap-5 flex flex-col items-center justify-center w-[100%] h-[100%] bg-gray-200">
