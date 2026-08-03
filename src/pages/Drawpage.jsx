@@ -4,7 +4,7 @@ import FishModelView from "../components/Drawpage/FishModelView";
 import { useSocketStore } from "../store/socketStore";
 import { useCanvasStore } from "../store/canvasStore";
 import ColoringView from "../components/Drawpage/ColoringView";
-import ModelSelect from "../components/Drawpage/ModelSelect";
+//import ModelSelect from "../components/Drawpage/ModelSelect";
 import BrushSizeSlider from "../components/Drawpage/BrushSizeSlider";
 
 
@@ -42,7 +42,7 @@ const Drawpage = () => {
             </header>
             
             <FishModelView/>
-            <ModelSelect/>
+            {/* <ModelSelect/> */}
 
             <BrushSizeSlider />
 
