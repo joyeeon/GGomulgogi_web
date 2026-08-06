@@ -36,19 +36,49 @@ const RotateModel = ({onDrawStart, onDrawEnd}) => {
     const drawingMaterial = useMemo(() => new THREE.MeshBasicMaterial({
     map: drawingTexture,
     transparent: true,
+    polygonOffset: true,
+    polygonOffsetFactor: -4,
+    polygonOffsetUnits: -4,
 }), [drawingTexture]);
 
     const isDrawing = useRef(false);
     const color = useBrushStore((state) => state.color);
     const brushSize = useBrushStore((state) => state.brushSize);
 
-    const draw = (uv) => {
+    // 맞은 삼각형의 UV 면적 대비 실제 월드 면적 비율로, 그 지점의 "UV 1단위당 월드 크기"를 구함
+    // (UV 언랩이 부위마다 밀도가 달라도, 이 비율로 보정하면 브러시가 항상 같은 실제 크기로 그려짐)
+    const getLocalUvToWorldScale = (face, object) => {
+        if (!face || !object?.geometry?.attributes?.uv) return 1;
+        const posAttr = object.geometry.attributes.position;
+        const uvAttr = object.geometry.attributes.uv;
+
+        const pA = new THREE.Vector3().fromBufferAttribute(posAttr, face.a).applyMatrix4(object.matrixWorld);
+        const pB = new THREE.Vector3().fromBufferAttribute(posAttr, face.b).applyMatrix4(object.matrixWorld);
+        const pC = new THREE.Vector3().fromBufferAttribute(posAttr, face.c).applyMatrix4(object.matrixWorld);
+
+        const uvA = new THREE.Vector2().fromBufferAttribute(uvAttr, face.a);
+        const uvB = new THREE.Vector2().fromBufferAttribute(uvAttr, face.b);
+        const uvC = new THREE.Vector2().fromBufferAttribute(uvAttr, face.c);
+
+        const worldArea = new THREE.Triangle(pA, pB, pC).getArea();
+        const uvArea = Math.abs(
+            (uvB.x - uvA.x) * (uvC.y - uvA.y) - (uvC.x - uvA.x) * (uvB.y - uvA.y)
+        ) / 2;
+
+        if (uvArea === 0 || worldArea === 0) return 1;
+        return Math.sqrt(worldArea / uvArea);
+    };
+
+    const draw = (uv, face, object) => {
         const context = canvas.getContext("2d");
         const x = uv.x * canvas.width;
         const y = (1-uv.y) * canvas.height;
 
+        const localScale = getLocalUvToWorldScale(face, object);
+        const pixelRadius = (brushSize * canvas.width) / localScale;
+
         context.beginPath();
-        context.arc(x, y, brushSize, 0, Math.PI * 2); // 10 = 브러시 크기 (나중에 조절 가능하게)
+        context.arc(x, y, pixelRadius, 0, Math.PI * 2);
         context.fillStyle = color;
         context.fill();
 
@@ -59,18 +89,34 @@ const RotateModel = ({onDrawStart, onDrawEnd}) => {
         e.stopPropagation();
         isDrawing.current = true;
         onDrawStart?.();
-        draw(e.uv);
+        draw(e.uv, e.face, e.object);
     };
 
     const handlePointerMove = (e) =>{
         if (!isDrawing.current) return;
-        draw(e.uv);
+        draw(e.uv, e.face, e.object);
     };
 
     const handlePointerUp = () => {
         isDrawing.current = false;
         onDrawEnd?.();
     }
+
+    // 그리다가 손가락/마우스가 캔버스 밖으로 나가서 handlePointerUp이 못 불리는 경우를 대비한 안전장치
+    useEffect(() => {
+        const handleGlobalPointerUp = () => {
+            if (isDrawing.current) {
+                isDrawing.current = false;
+                onDrawEnd?.();
+            }
+        };
+        window.addEventListener("pointerup", handleGlobalPointerUp);
+        window.addEventListener("pointercancel", handleGlobalPointerUp);
+        return () => {
+            window.removeEventListener("pointerup", handleGlobalPointerUp);
+            window.removeEventListener("pointercancel", handleGlobalPointerUp);
+        };
+    }, [onDrawEnd]);
 
     const setCanvas = useCanvasStore((state) => state.setCanvas);
 
