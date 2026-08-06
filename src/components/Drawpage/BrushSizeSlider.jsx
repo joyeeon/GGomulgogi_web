@@ -8,7 +8,7 @@ const BrushSizeSlider = () =>{
     return(
         <input 
             type="range"
-            min="0.3"
+            min="1.2"
             max="4"
             step="0.1"
             value={brushSize}
