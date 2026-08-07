@@ -2,6 +2,7 @@ import { LuFish } from "react-icons/lu";
 import {useNavigate} from "react-router-dom";
 import Modalcomponent from "../components/Modal";
 import { useState , useEffect} from "react";
+import Logo from "../assets/images/logo1.png";
 
 const Homepage = () => {
     const navigate = useNavigate();
@@ -33,7 +34,14 @@ const Homepage = () => {
 
     return(
         <div className="page">
-        <div className = "w-[50%] h-[100px] bg-red-200">   로고 대신</div>
+        <img
+            src={Logo}
+            alt="꼬물고기 로고"
+            className="h-[160px] object-contain"
+            style={{
+                filter: " drop-shadow(0 0 4px rgba(255,255,255,0.7)) drop-shadow(0 0 8px rgba(255,255,255,0.5))",
+            }}
+        />
 
         <div className="flex flex-col items-start justify-center gap-1 mt-10">
             <p className="pl-2 text-white">닉네임을 입력해 주세요.</p>

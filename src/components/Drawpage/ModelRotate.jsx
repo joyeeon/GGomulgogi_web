@@ -45,8 +45,7 @@ const RotateModel = ({onDrawStart, onDrawEnd}) => {
     const color = useBrushStore((state) => state.color);
     const brushSize = useBrushStore((state) => state.brushSize);
 
-    // 맞은 삼각형의 UV 면적 대비 실제 월드 면적 비율로, 그 지점의 "UV 1단위당 월드 크기"를 구함
-    // (UV 언랩이 부위마다 밀도가 달라도, 이 비율로 보정하면 브러시가 항상 같은 실제 크기로 그려짐)
+
     const getLocalUvToWorldScale = (face, object) => {
         if (!face || !object?.geometry?.attributes?.uv) return 1;
         const posAttr = object.geometry.attributes.position;
