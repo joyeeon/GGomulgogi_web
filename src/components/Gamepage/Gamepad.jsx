@@ -11,13 +11,23 @@ const Gamepad = () => {
 
     const handlePress = (direction) => {
         pressedDirections.current[direction] = true;
-        send({type:"move", direction, pressed:true});
+        send({
+            type: "move",
+            direction,
+            pressed: true,
+            nickname: localStorage.getItem("nickname"),
+        });
     };
 
     const handleRelease = (direction) =>{
         if (!pressedDirections.current[direction]) return; // 실제로 눌린 적 없으면 무시
         pressedDirections.current[direction] = false;
-        send({type:"move", direction, pressed:false});
+        send({
+            type: "move",
+            direction,
+            pressed: false,
+            nickname: localStorage.getItem("nickname"),
+        });
     };
 
 
